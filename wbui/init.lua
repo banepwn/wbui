@@ -4,6 +4,7 @@ gui.require = ...
 gui.path = gui.require:gsub("%.", "/")
 function gui.initialize(tbl)
 	tbl = tbl or {}
+	local default = (tbl.fonts or {}).default or love.graphics.newFont(11)
 	gui.fonts = {
 		default = default,
 		windowTitle = default
