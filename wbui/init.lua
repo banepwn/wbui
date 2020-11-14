@@ -4,7 +4,37 @@ gui.require = ...
 gui.path = gui.require:gsub("%.", "/")
 function gui.initialize(tbl)
 	tbl = tbl or {}
-	gui.font = tbl.font or love.graphics.newFont(14)
+	gui.fonts = {
+		default = default,
+		windowTitle = default
+	}
+	for k, v in pairs(tbl.fonts or {}) do
+		gui.fonts[k] = v
+	end
+	gui.fonts.__index = gui.fonts
+	gui.colors = {
+		frameBackground = {0.831, 0.816, 0.784},
+		frameHighlight = {1, 1, 1},
+		frameHighlight2 = {0.831, 0.816, 0.784},
+		frameShadow = {0.52, 0.52, 0.52},
+		frameShadow2 = {0.251, 0.251, 0.251},
+		windowTitle = {0.039, 0.141, 0.416},
+		windowTitle2 = {0.651, 0.792, 0.941},
+		windowTitleText = {1, 1, 1},
+		windowTitleInactive = {0.502, 0.502, 0.502},
+		windowTitleInactive2 = {0.753, 0.753, 0.753},
+		windowTitleTextInactive = {0.831, 0.816, 0.784},
+		buttonBackground = {0.831, 0.816, 0.784},
+		buttonHighlight = {1, 1, 1},
+		buttonHighlight2 = {0.831, 0.816, 0.784},
+		buttonShadow = {0.52, 0.52, 0.52},
+		buttonShadow2 = {0.251, 0.251, 0.251},
+		buttonText = {0, 0, 0},
+	}
+	for k, v in pairs(tbl.colors or {}) do
+		gui.colors[k] = v
+	end
+	gui.colors.__index = gui.colors
 	for _, widget in ipairs(tbl.classes or {
 		"frame",
 		"button",
@@ -45,33 +75,6 @@ function gui.initialize(tbl)
 		end
 	end
 end
-
-local default = love.graphics.newFont(11)
-gui.fonts = {
-	default = default,
-	windowTitle = default
-}
-gui.fonts.__index = gui.fonts
-gui.colors = {
-	frameBackground = {0.831, 0.816, 0.784},
-	frameHighlight = {1, 1, 1},
-	frameHighlight2 = {0.831, 0.816, 0.784},
-	frameShadow = {0.52, 0.52, 0.52},
-	frameShadow2 = {0.251, 0.251, 0.251},
-	windowTitle = {0.039, 0.141, 0.416},
-	windowTitle2 = {0.651, 0.792, 0.941},
-	windowTitleText = {1, 1, 1},
-	windowTitleInactive = {0.502, 0.502, 0.502},
-	windowTitleInactive2 = {0.753, 0.753, 0.753},
-	windowTitleTextInactive = {0.831, 0.816, 0.784},
-	buttonBackground = {0.831, 0.816, 0.784},
-	buttonHighlight = {1, 1, 1},
-	buttonHighlight2 = {0.831, 0.816, 0.784},
-	buttonShadow = {0.52, 0.52, 0.52},
-	buttonShadow2 = {0.251, 0.251, 0.251},
-	buttonText = {0, 0, 0},
-}
-gui.colors.__index = gui.colors
 
 gui.classbase = {
 	name = "element",
