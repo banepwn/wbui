@@ -22,6 +22,7 @@ Key | Value
 `fonts` | Table of fonts
 `colors` | Table of colors
 `classes` | Array of classes to load
+### element
 #### element:new(**vararg**: parameters)
 Create, initialize, and return a new element. Called by `wbui.new`. Should not be called directly.
 #### element:initialize(optional **number**: x, optional **number**: y)
@@ -34,7 +35,7 @@ Removes self from parent (if applicable). Does not actually destroy the object, 
 Calls itself on all of its children.
 #### element:draw()
 Calls itself on all of its children. Make sure to reset the graphics state to something reasonable before using this or else weird things might happen. `love.graphics.translate` is used to make each child draw relative to its parent.
-#### element:mouseDown(**number**: button, **number**:: x, **number** y)
+#### element:mouseDown(**number**: button, **number**: x, **number** y)
 Calls itself on any child where the cursor is within its bounding box.
 #### element:mouseUp(**number**: button, **number**: x, **number**: y)
 Ditto.
@@ -44,14 +45,24 @@ Does nothing.
 Same as `element:mouseUp`, except it will also call itself once on `wbui.mouseDown`, if it exists.
 #### wbui.root:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
 Calls `element:mouseMoved` on `wbui.mouseDown`, if it exists.
+### frame
+Like a window, but with less functionality.
 #### frame:initialize(**number**: x, **number**: y, **number**: width, **number**: height)
 Creates a new frame with the corresponding dimensions.
+### button
+A button with text that can be clicked.
 #### button:initialize(optional **string**: text, **number**: x, **number**: y, optional **number**: width, optional **number**: height)
 Defaults to 75×23. If text is not specified, the button will be blank.
 #### button:onClick()
 Does nothing. Intended to be overridden by the user.
+### imagebutton
+Like a button, but with an image.
 #### imagebutton:initialize(optional **Image**: image, **number**: x, **number**: y, optional **number**: width, optional **number**: height)
 Defaults to 75×23. If image is a string, it will be loaded with `love.graphics.newImage`. If no image is specified, the button will be blank.
+### window
+A window with a title bar and (optional) title bar buttons that can be focused, unfocused, or dragged around.
+#### window:initialize(optional **string**: title, **number**: x, **number**: y, **number**: width, **number**: height)
+Creates a new window. If no title is specified, "Window" will be used. The window will have focus by default, so if you spawn multiple windows at once, you should call `window:bringToFront` on one so that only one is focused.
 #### window:bringToFront()
 Focuses the window and unfocuses any other window with the same parent.
 #### window:close()
