@@ -1,7 +1,10 @@
 # WBUI
 ![Screenshot](screenshot.png)
 
-A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system written in pure Lua for the [LÖVE](https://love2d.org/) game engine. See `main.lua` for instructions on usage.
+A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system written in pure Lua for the [LÖVE](https://love2d.org/) game engine.
+
+## Usage
+See `main.lua` for example usage. **Note that WBUI makes some assumptions about its path.** If you require WBUI with `require("foo.bar")`, WBUI will assume it is located at `foo/bar`. If this is not the case, you need to manually override `wbui.path` to refer to the correct path *before* calling `wbui.initialize`.
 
 ## License
 This library is licensed under the zlib license. For more information, see `LICENSE.txt`. **This software is offered with no warranty. If it ruins your project or burns your house down, it's not my problem.**
