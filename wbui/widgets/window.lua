@@ -76,7 +76,12 @@ return function(gui)
 		end
 	end
 	function elclass:onClose() end
-	function elclass:toggleMaximized() end
+	function elclass:toggleMaximized()
+		self.maximized = not self.maximized
+		if self.maximizebtn then
+			self.maximizebtn.image = self.maximized and self.buttonIcons.unmaximize or self.buttonIcons.maximize
+		end
+	end
 	function elclass:minimize() end
 	function elclass:help() end
 	elclass.buttonIcons = {

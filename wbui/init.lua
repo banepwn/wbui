@@ -46,28 +46,10 @@ function gui.initialize(tbl)
 	end
 	gui.root = setmetatable({children = {}}, gui.classbase)
 	function gui.root:mouseUp(button, x, y)
-		local mouseDown = gui.mouseDown
-		if mouseDown then
-			mouseDown:mouseUp(button, x, y)
-		end
-		local len = #self.children
-		if len == 0 then
-			return false
-		end
-		for i=len, 1, -1 do
-			local child = self.children[i]
-			if
-				child ~= mouseDown and
-				x >= child.x+(self.ix or 0) and
-				x < child.x+child.w+(self.ix or 0) and
-				y >= child.y+(self.iy or 0) and
-				y < child.y+child.h+(self.iy or 0)
-			then
-				local el = child:mouseUp(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0))
-				if el then
-					return el
-				end
-			end
+		if gui.mouseDown then
+			return gui.mouseDown:mouseUp(button)
+		else
+			return gui.classbase.mouseUp(self, button, x, y)
 		end
 	end
 	function gui.root:mouseMoved(x, y, dx, dy, touch)
@@ -150,6 +132,7 @@ gui.classbase = {
 		for i=len, 1, -1 do
 			local child = self.children[i]
 			if
+				child ~= gui.mouseDown and
 				x >= child.x+(self.ix or 0) and
 				x < child.x+child.w+(self.ix or 0) and
 				y >= child.y+(self.iy or 0) and
@@ -166,17 +149,10 @@ gui.classbase = {
 }
 gui.classbase.__index = gui.classbase
 function gui.class(name, extends)
-	local class = {}
-	--[[
-	if extends then
-		for k, v in pairs(extends) do
-			class[k] = v
-		end
-	end
-	]]
-	class.name = name
+	local class = {
+		name = name
+	}
 	class.__index = class
-	--return setmetatable(class, gui.classbase)
 	return setmetatable(class, extends or gui.classbase)
 end
 
