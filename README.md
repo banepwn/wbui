@@ -11,6 +11,8 @@ This library is licensed under the zlib license. For more information, see `LICE
 
 **The default theme is designed to resemble the Windows Classic theme.** Given how simple the theme is and the fact respected projects such as [Wine](https://i.imgur.com/PHNGyHO.png) and [ReactOS](https://reactos.org/sites/default/files/linter.png) comfortably reimplement the same theme and claim legality, I don't think this is a problem. If you disagree, consider making a fork or pull request to change it.
 
+[`calculator.png` is a public domain image by the Tango Desktop Project.](https://commons.wikimedia.org/wiki/File:Accessories-calculator.svg)
+
 ## Documentation
 ### Global
 #### wbui.new(**string**: element class, **vararg** parameters)
