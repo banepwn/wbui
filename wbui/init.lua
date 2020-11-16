@@ -104,7 +104,7 @@ gui.classbase = {
 			love.graphics.pop()
 		end
 	end,
-	mouseDown = function(self, button, x, y)
+	mouseDown = function(self, button, x, y, presses, touch)
 		local len = #self.children
 		if len == 0 then
 			return false
@@ -117,14 +117,14 @@ gui.classbase = {
 				y >= child.y+(self.iy or 0) and
 				y < child.y+child.h+(self.iy or 0)
 			then
-				local el = child:mouseDown(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0))
+				local el = child:mouseDown(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), presses, touch)
 				if el then
 					return el
 				end
 			end
 		end
 	end,
-	mouseUp = function(self, button, x, y)
+	mouseUp = function(self, button, x, y, presses, touch)
 		local len = #self.children
 		if len == 0 then
 			return false
@@ -138,7 +138,7 @@ gui.classbase = {
 				y >= child.y+(self.iy or 0) and
 				y < child.y+child.h+(self.iy or 0)
 			then
-				local el = child:mouseUp(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0))
+				local el = child:mouseUp(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), presses, touch)
 				if el then
 					return el
 				end

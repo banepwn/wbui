@@ -40,9 +40,9 @@ Removes self from parent (if applicable). Does not actually destroy the object, 
 Calls itself on all of its children.
 #### element:draw()
 Calls itself on all of its children. Make sure to reset the graphics state to something reasonable before using this or else weird things might happen. `love.graphics.translate` is used to make each child draw relative to its parent.
-#### element:mouseDown(**number**: button, **number**: x, **number** y)
+#### element:mouseDown(**number**: button, **number**: x, **number** y, **number** number of clicks in short time, **boolean**, is touch event)
 Calls itself on any child where the cursor is within its bounding box.
-#### element:mouseUp(**number**: button, **number**: x, **number**: y)
+#### element:mouseUp(**number**: button, **number**: x, **number**: y, **number** number of clicks in short time, **boolean**, is touch event)
 Ditto.
 #### element:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
 Does nothing.

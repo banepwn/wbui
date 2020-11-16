@@ -48,8 +48,8 @@ function love.draw()
 	wbui.root:draw()
 end
 
-function love.mousepressed(x, y, button)
-	wbui.root:mouseDown(button, x, y)
+function love.mousepressed(x, y, button, touch, presses)
+	wbui.root:mouseDown(button, x, y, presses, touch)
 end
 
 function love.mousereleased(x, y, button, touch, presses)
