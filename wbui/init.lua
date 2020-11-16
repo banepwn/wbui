@@ -44,7 +44,13 @@ function gui.initialize(tbl)
 	}) do
 		gui.classes[widget] = require(gui.require..".widgets."..widget)(gui)
 	end
-	gui.root = setmetatable({children = {}}, gui.classbase)
+	gui.root = setmetatable({
+		x = 0,
+		y = 0,
+		w = love.graphics.getWidth(),
+		h = love.graphics.getHeight(),
+		children = {}
+	}, gui.classbase)
 	function gui.root:mouseUp(button, x, y)
 		if gui.mouseDown then
 			return gui.mouseDown:mouseUp(button)
@@ -113,9 +119,9 @@ gui.classbase = {
 			local child = self.children[i]
 			if
 				x >= child.x+(self.ix or 0) and
-				x < child.x+child.w+(self.ix or 0) and
+				x <= child.x+child.w+(self.ix or 0) and
 				y >= child.y+(self.iy or 0) and
-				y < child.y+child.h+(self.iy or 0)
+				y <= child.y+child.h+(self.iy or 0)
 			then
 				local el = child:mouseDown(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), presses, touch)
 				if el then

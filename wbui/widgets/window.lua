@@ -13,6 +13,8 @@ return function(gui)
 		self.focus = true
 		self.window = true
 		self.maximized = false
+		self.resizable = true
+		self.resizing = false
 	end
 	function elclass:bringToFront()
 		self.focus = true
@@ -27,38 +29,95 @@ return function(gui)
 		end
 		table.insert(self.parent.children, table.remove(self.parent.children, i))
 	end
-	function elclass:mouseDown(button, x, y)
+	function elclass:mouseDown(button, x, y, presses, touch)
 		if button ~= 1 then
 			return
 		end
 		self:bringToFront()
-		local el = gui.classbase.mouseDown(self, button, x, y)
-		if
-			not el and
+		self.resizing = false
+		local el = gui.classbase.mouseDown(self, button, x, y, presses, touch)
+		if el then
+			return el
+		elseif
 			x >= 3 and
 			x < self.w-6 and
 			y >= 3 and
-			y < 21
+			y <= 21
 		then
 			gui.mouseDown = self
-			return self
-		else
-			return el or self
+		elseif self.resizable and not self.maximized then
+			self.rx = 0
+			self.ry = 0
+			if x <= 3 then
+				gui.mouseDown = self
+				self.resizing = true
+				self.rx = -1
+			elseif x > self.w-3 then
+				gui.mouseDown = self
+				self.resizing = true
+				self.rx = 1
+			end
+			if y <= 3 then
+				gui.mouseDown = self
+				self.resizing = true
+				self.ry = -1
+			
+			elseif y > self.h-3 then
+				gui.mouseDown = self
+				self.resizing = true
+				self.ry = 1
+			end
 		end
+		return self
 	end
-	function elclass:mouseUp(button, x, y)
+	function elclass:mouseUp(button, x, y, presses, touch)
 		if button ~= 1 then
 			return
 		end
 		if gui.mouseDown == self then
 			gui.mouseDown = nil
+			self.resizing = false
 		else
-			return gui.classbase.mouseUp(self, button, x, y)
+			return gui.classbase.mouseUp(self, button, x, y, presses, touch)
 		end
 	end
 	function elclass:mouseMoved(x, y, dx, dy, touch)
-		self.x = self.x+dx
-		self.y = self.y+dy
+		if self.resizing then
+			if self.rx < 0 then
+				self.x = self.x+dx
+			end
+			self.w = self.w+dx*self.rx
+			if self.ry < 0 then
+				self.y = self.y+dy
+			end
+			self.h = self.h+dy*self.ry
+			self:updateInnerDimensions()
+		else
+			self.x = self.x+dx
+			self.y = self.y+dy
+		end
+	end
+	function elclass:setMaximized(bool)
+		if self.maximized == bool then
+			return
+		end
+		self.maximized = bool
+		if bool then
+			self.ox = self.x
+			self.oy = self.y
+			self.ow = self.w
+			self.oh = self.h
+			self.x = 0
+			self.y = 0
+			self.w = self.parent.w
+			self.h = self.parent.h
+		else
+			self.x = self.ox or self.x
+			self.y = self.oy or self.y
+			self.w = self.ow or self.w
+			self.h = self.oh or self.h
+		end
+		self:updateInnerDimensions()
 	end
 	function elclass:close()
 		if not self:onClose() then
@@ -77,7 +136,7 @@ return function(gui)
 	end
 	function elclass:onClose() end
 	function elclass:toggleMaximized()
-		self.maximized = not self.maximized
+		self:setMaximized(not self.maximized)
 		if self.maximizebtn then
 			self.maximizebtn.image = self.maximized and self.buttonIcons.unmaximize or self.buttonIcons.maximize
 		end

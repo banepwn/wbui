@@ -70,12 +70,14 @@ A window with a title bar and (optional) title bar buttons that can be focused, 
 Creates a new window. If no title is specified, "Window" will be used. The window will have focus by default, so if you spawn multiple windows at once, you should call `window:bringToFront` on one so that only one is focused.
 #### window:bringToFront()
 Focuses the window and unfocuses any other window with the same parent.
+#### window:setMaximized(**boolean**: maximized)
+Sets whether the window is maximized or not. When maximized, the window fills its entire parent and cannot be resized. When unmaximized, the window is restored to is original size.
 #### window:close()
 Removes the window and brings another window to the front.
 #### window:onClose()
 Does nothing. Return `true` to prevent the window from being closed.
 #### window:toggleMaximized()
-Does nothing.
+Calls `window:setMaximized` and updates the button icon.
 #### window:minimize()
 Does nothing.
 #### window:help()
