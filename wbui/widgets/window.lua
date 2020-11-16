@@ -83,14 +83,16 @@ return function(gui)
 	end
 	function elclass:mouseMoved(x, y, dx, dy, touch)
 		if self.resizing then
+			local nw = math.max(self.w+dx*self.rx, 76)
 			if self.rx < 0 then
-				self.x = self.x+dx
+				self.x = self.x-(nw-self.w)
 			end
-			self.w = self.w+dx*self.rx
+			self.w = nw
+			local ny = math.max(self.h+dy*self.ry, 25)
 			if self.ry < 0 then
-				self.y = self.y+dy
+				self.y = self.y-(ny-self.h)
 			end
-			self.h = self.h+dy*self.ry
+			self.h = ny
 			self:updateInnerDimensions()
 		else
 			self.x = self.x+dx
