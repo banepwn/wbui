@@ -43,7 +43,7 @@ return function(gui)
 			gui.mouseDown = self
 			return self
 		else
-			return el
+			return el or self
 		end
 	end
 	function elclass:mouseUp(button, x, y)

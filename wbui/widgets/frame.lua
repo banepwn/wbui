@@ -20,5 +20,8 @@ return function(gui)
 		love.graphics.line(self.w-1.5, 0.5, self.w-1.5, self.h-1.5, 1.5, self.h-1.5)
 		gui.classbase.draw(self)
 	end
+	function elclass:mouseDown()
+		return self
+	end
 	return elclass
 end
