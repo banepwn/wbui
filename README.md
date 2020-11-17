@@ -14,6 +14,7 @@ This library is licensed under the zlib license. For more information, see `LICE
 [`calculator.png` is a public domain image by the Tango Desktop Project.](https://commons.wikimedia.org/wiki/File:Accessories-calculator.svg)
 
 ## Documentation
+For something as simple as this, I'd recommend following the mantra of "The code *is* the documentation."
 ### Global
 #### wbui.new(**string**: element class, **vararg** parameters)
 Creates a new element. Parameters dependent on class. Internally does `return wbui.classes[name]:new(...)`.
@@ -21,7 +22,6 @@ Creates a new element. Parameters dependent on class. Internally does `return wb
 Creates a new element class. It may optionally extend another class. This does not add it to `wbui.classes` for use with `wbui.new`, so it is necessary to add it manually.
 #### wbui.initialize(optional **table**: configuration data)
 Initializes WBUI.
-##### Configuration options
 Key | Value
 --- | ---
 `fonts` | Table of fonts
@@ -92,3 +92,9 @@ Sets (or removes) the icon for the window. If the icon is a string, it will be l
 Updates `self.ix`, `self.iy`, `self.iw`, and `self.ih` to correspond with the window's dimensions. Also calls `window:updateButtonPositions`.
 #### window:generateTitleBar()
 Generates the meshes used for the title bar gradient. You only need to call this manually if you update the title bar colors *after* creating the window.
+### label
+Displays text.
+#### label:initialize(optional **string**: text, **number**: x, **number**: y, **number**: width, optional **number** height)
+If text is not specified, "Label" will be used. If height is not specified, it will be calculated with `label:calculateHeight`.
+#### label:calculateHeight(optional **number**: width)
+Returns the calculated height of the text. Uses current width if not specified.

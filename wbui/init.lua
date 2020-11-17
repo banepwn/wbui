@@ -14,6 +14,7 @@ function gui.initialize(tbl)
 	end
 	gui.fonts.__index = gui.fonts
 	gui.colors = {
+		text = {0, 0, 0},
 		frameBackground = {0.831, 0.816, 0.784},
 		frameHighlight = {1, 1, 1},
 		frameHighlight2 = {0.831, 0.816, 0.784},
@@ -40,7 +41,8 @@ function gui.initialize(tbl)
 		"frame",
 		"button",
 		"imagebutton",
-		"window"
+		"window",
+		"label"
 	}) do
 		gui.classes[widget] = require(gui.require..".widgets."..widget)(gui)
 	end
