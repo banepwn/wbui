@@ -45,11 +45,15 @@ Calls itself on any child where the cursor is within its bounding box.
 #### element:mouseUp(**number**: button, **number**: x, **number**: y, **number** number of clicks in short time, **boolean**, is touch event)
 Ditto.
 #### element:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
-Does nothing.
+Ditto, but also calls `element:mouseEnter` and `element:mouseLeave`. Buggy.
+#### element:mouseEnter(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
+Does nothing. Called when the cursor hovers over the element.
+#### element:mouseLeave(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
+Does nothing. Called when the cursor stops hovering over the element.
 #### wbui.root:mouseUp(**number**: button, **number**: x, **number**: y)
 Same as `element:mouseUp`, except it will also call itself once on `wbui.mouseDown`, if it exists.
 #### wbui.root:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
-Calls `element:mouseMoved` on `wbui.mouseDown`, if it exists.
+Same as `element:mouseMoved`, except it will also call itself once on `wbui.mouseDown`, if it exists.
 ### frame
 Like a window, but with less functionality.
 #### frame:initialize(**number**: x, **number**: y, **number**: width, **number**: height)

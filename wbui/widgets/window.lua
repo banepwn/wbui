@@ -9,6 +9,7 @@ return function(gui)
 		self:updateInnerDimensions()
 		self.colors = setmetatable({}, gui.colors)
 		self.fonts = setmetatable({}, gui.fonts)
+		self.cursors = setmetatable({}, gui.cursors)
 		self:generateTitleBar()
 		self.focus = true
 		self.window = true
@@ -61,7 +62,6 @@ return function(gui)
 				gui.mouseDown = self
 				self.resizing = true
 				self.ry = -1
-			
 			elseif y > self.h-3 then
 				gui.mouseDown = self
 				self.resizing = true
@@ -69,6 +69,32 @@ return function(gui)
 			end
 		end
 		return self
+	end
+	function elclass:updateCursor(x, y)
+		if x <= 3 then
+			x = -1
+		elseif x > self.w-3 then
+			x = 1
+		else
+			x = nil
+		end
+		if y <= 3 then
+			love.mouse.setCursor(
+				x and 
+				(x > 0 and self.cursors.resizeTRBL or self.cursors.resizeTLBR) or
+				self.cursors.resizeTB
+			)
+		elseif y > self.h-3 then
+			love.mouse.setCursor(
+				x and
+				(x > 0 and self.cursors.resizeTLBR or self.cursors.resizeTRBL) or
+				self.cursors.resizeTB
+			)
+		elseif not x then
+			love.mouse.setCursor()
+		else
+			love.mouse.setCursor(self.cursors.resizeLR)
+		end
 	end
 	function elclass:mouseUp(button, x, y, presses, touch)
 		if button ~= 1 then
@@ -94,10 +120,15 @@ return function(gui)
 			end
 			self.h = ny
 			self:updateInnerDimensions()
-		else
+		elseif gui.mouseDown == self then
 			self.x = self.x+dx
 			self.y = self.y+dy
+		else
+			self:updateCursor(x, y)
 		end
+	end
+	function elclass:mouseLeave()
+		love.mouse.setCursor()
 	end
 	function elclass:setMaximized(bool)
 		if self.maximized == bool then

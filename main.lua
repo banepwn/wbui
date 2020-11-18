@@ -35,6 +35,128 @@ function love.load()
 		self.text = "clicked "..n.." time"..(n == 1 and "" or "s")
 	end
 	wbui.root:append(h)
+	
+	-- in retrospect, i could have used a loop.
+	cur_arrow = wbui.new("button", "arrow", 450, 100, 45, 45)
+	cur_arrow.enabled = false
+	cur_arrow.cursor = love.mouse.getSystemCursor("arrow")
+	function cur_arrow:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_arrow:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_arrow)
+	cur_ibeam = wbui.new("button", "ibeam", 500, 100, 45, 45)
+	cur_ibeam.enabled = false
+	cur_ibeam.cursor = love.mouse.getSystemCursor("ibeam")
+	function cur_ibeam:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_ibeam:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_ibeam)
+	cur_wait = wbui.new("button", "wait", 550, 100, 45, 45)
+	cur_wait.enabled = false
+	cur_wait.cursor = love.mouse.getSystemCursor("wait")
+	function cur_wait:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_wait:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_wait)
+	cur_waitarrow = wbui.new("button", "waitarrow", 600, 100, 45, 45)
+	cur_waitarrow.enabled = false
+	cur_waitarrow.cursor = love.mouse.getSystemCursor("waitarrow")
+	function cur_waitarrow:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_waitarrow:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_waitarrow)
+	cur_crosshair = wbui.new("button", "crosshair", 650, 100, 45, 45)
+	cur_crosshair.enabled = false
+	cur_crosshair.cursor = love.mouse.getSystemCursor("crosshair")
+	function cur_crosshair:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_crosshair:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_crosshair)
+	cur_hand = wbui.new("button", "hand", 700, 100, 45, 45)
+	cur_hand.enabled = false
+	cur_hand.cursor = love.mouse.getSystemCursor("hand")
+	function cur_hand:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_hand:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_hand)
+	cur_sizewe = wbui.new("button", "sizewe", 450, 150, 45, 45)
+	cur_sizewe.enabled = false
+	cur_sizewe.cursor = love.mouse.getSystemCursor("sizewe")
+	function cur_sizewe:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_sizewe:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_sizewe)
+	cur_sizens = wbui.new("button", "sizens", 500, 150, 45, 45)
+	cur_sizens.enabled = false
+	cur_sizens.cursor = love.mouse.getSystemCursor("sizens")
+	function cur_sizens:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_sizens:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_sizens)
+	cur_sizenesw = wbui.new("button", "sizenesw", 550, 150, 45, 45)
+	cur_sizenesw.enabled = false
+	cur_sizenesw.cursor = love.mouse.getSystemCursor("sizenesw")
+	function cur_sizenesw:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_sizenesw:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_sizenesw)
+	cur_sizenwse = wbui.new("button", "sizenwse", 600, 150, 45, 45)
+	cur_sizenwse.enabled = false
+	cur_sizenwse.cursor = love.mouse.getSystemCursor("sizenwse")
+	function cur_sizenwse:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_sizenwse:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_sizenwse)
+	cur_sizeall = wbui.new("button", "sizeall", 650, 150, 45, 45)
+	cur_sizeall.enabled = false
+	cur_sizeall.cursor = love.mouse.getSystemCursor("sizeall")
+	function cur_sizeall:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_sizeall:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_sizeall)
+	cur_no = wbui.new("button", "no", 700, 150, 45, 45)
+	cur_no.enabled = false
+	cur_no.cursor = love.mouse.getSystemCursor("no")
+	function cur_no:mouseEnter()
+		love.mouse.setCursor(self.cursor)
+	end
+	function cur_no:mouseLeave()
+		love.mouse.setCursor()
+	end
+	wbui.root:append(cur_no)
 end
 
 function love.update(dt)

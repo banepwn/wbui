@@ -54,7 +54,7 @@ return function(gui)
 		return self
 	end
 	function elclass:mouseUp(button, x, y)
-		if button ~= 1 then
+		if button ~= 1 or gui.mouseDown ~= self then
 			return
 		end
 		if self.enabled then
