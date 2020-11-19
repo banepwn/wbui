@@ -200,9 +200,11 @@ gui.classbase = {
 		end
 		if ret ~= self.hover then
 			if self.hover then
+				self.hover.hover = false
 				self.hover:mouseLeave(x, y, dx, dy, touch)
 			end
 			if ret then
+				ret.hover = true
 				ret:mouseEnter(x, y, dx, dy, touch)
 			end
 			self.hover = ret

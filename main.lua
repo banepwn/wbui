@@ -35,6 +35,11 @@ function love.load()
 		self.text = "clicked "..n.." time"..(n == 1 and "" or "s")
 	end
 	wbui.root:append(h)
+	k = wbui.new("button", "hover test", 300, 125, 100)
+	function k:update()
+		self.text = self.hover and "hovering" or "not hovering"
+	end
+	wbui.root:append(k)
 	j = wbui.new("button", "dump root's kids", 300, 150, 100)
 	function j:onClick()
 		for k, v in ipairs(wbui.root.children) do
