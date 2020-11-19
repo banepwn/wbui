@@ -146,9 +146,9 @@ gui.classbase = {
 			local child = self.children[i]
 			if
 				x >= child.x+(self.ix or 0) and
-				x <= child.x+child.w+(self.ix or 0) and
+				x < child.x+child.w+(self.ix or 0) and
 				y >= child.y+(self.iy or 0) and
-				y <= child.y+child.h+(self.iy or 0)
+				y < child.y+child.h+(self.iy or 0)
 			then
 				local el = child:mouseDown(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), presses, touch)
 				if el then
