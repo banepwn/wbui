@@ -45,7 +45,7 @@ Calls itself on any child where the cursor is within its bounding box.
 #### element:mouseUp(**number**: button, **number**: x, **number**: y, **number** number of clicks in short time, **boolean**, is touch event)
 Ditto.
 #### element:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
-Ditto, but also calls `element:mouseEnter` and `element:mouseLeave`. Buggy.
+Ditto, but also calls `element:mouseEnter` and `element:mouseLeave`.
 #### element:mouseEnter(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
 Does nothing. Called when the cursor hovers over the element.
 #### element:mouseLeave(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)

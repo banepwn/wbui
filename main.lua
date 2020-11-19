@@ -35,6 +35,13 @@ function love.load()
 		self.text = "clicked "..n.." time"..(n == 1 and "" or "s")
 	end
 	wbui.root:append(h)
+	j = wbui.new("button", "dump root's kids", 300, 150, 100)
+	function j:onClick()
+		for k, v in ipairs(wbui.root.children) do
+			print(k, v, v.title)
+		end
+	end
+	wbui.root:append(j)
 	
 	-- in retrospect, i could have used a loop.
 	cur_arrow = wbui.new("button", "arrow", 450, 100, 45, 45)

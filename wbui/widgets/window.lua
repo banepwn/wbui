@@ -120,9 +120,11 @@ return function(gui)
 			end
 			self.h = ny
 			self:updateInnerDimensions()
+			return true
 		elseif gui.mouseDown == self then
 			self.x = self.x+dx
 			self.y = self.y+dy
+			return true
 		else
 			self:updateCursor(x, y)
 		end

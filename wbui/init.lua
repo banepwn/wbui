@@ -70,8 +70,7 @@ function gui.initialize(tbl)
 		y = 0,
 		w = love.graphics.getWidth(),
 		h = love.graphics.getHeight(),
-		children = {},
-		hover = {}
+		children = {}
 	}, gui.classbase)
 	function gui.root:mouseUp(button, x, y, presses, touch)
 		if gui.mouseDown then
@@ -97,8 +96,7 @@ gui.classbase = {
 	name = "element",
 	new = function(self, ...)
 		local element = setmetatable({
-			children = {},
-			hover = {}
+			children = {}
 		}, self)
 		element:initialize(...)
 		return element
@@ -185,9 +183,6 @@ gui.classbase = {
 		if len == 0 then
 			return false
 		end
-		local oldhover = self.hover
-		local newhover = {}
-		self.hover = newhover
 		local ret
 		for i=len, 1, -1 do
 			local child = self.children[i]
@@ -198,24 +193,19 @@ gui.classbase = {
 				y >= child.y+(self.iy or 0) and
 				y < child.y+child.h+(self.iy or 0)
 			then
-				self.hover[child] = true
-				local el = child:mouseMoved(x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), dx, dy, presses, touch)
-				if el then
-					ret = el
-					break
-				end
+				child:mouseMoved(x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), dx, dy, presses, touch)
+				ret = child
+				break
 			end
 		end
-		-- TODO: there is probably a better way to do this...
-		for k, v in pairs(oldhover) do
-			if not newhover[k] then
-				k:mouseLeave(x, y, dx, dy, touch)
+		if ret ~= self.hover then
+			if self.hover then
+				self.hover:mouseLeave(x, y, dx, dy, touch)
 			end
-		end
-		for k, v in pairs(newhover) do
-			if not oldhover[k] then
-				k:mouseEnter(x, y, dx, dy, touch)
+			if ret then
+				ret:mouseEnter(x, y, dx, dy, touch)
 			end
+			self.hover = ret
 		end
 		return ret
 	end,
