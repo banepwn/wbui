@@ -70,7 +70,8 @@ function gui.initialize(tbl)
 		y = 0,
 		w = love.graphics.getWidth(),
 		h = love.graphics.getHeight(),
-		children = {}
+		children = {},
+		visible = true
 	}, gui.classbase)
 	function gui.root:mouseUp(button, x, y, presses, touch)
 		if gui.mouseDown then
@@ -96,7 +97,8 @@ gui.classbase = {
 	name = "element",
 	new = function(self, ...)
 		local element = setmetatable({
-			children = {}
+			children = {},
+			visible = true
 		}, self)
 		element:initialize(...)
 		return element
@@ -131,10 +133,12 @@ gui.classbase = {
 	end,
 	draw = function(self)
 		for i, child in ipairs(self.children) do
-			love.graphics.push("all")
-				love.graphics.translate(child.x, child.y)
-				child:draw()
-			love.graphics.pop()
+			if child.visible then
+				love.graphics.push("all")
+					love.graphics.translate(child.x, child.y)
+					child:draw()
+				love.graphics.pop()
+			end
 		end
 	end,
 	mouseDown = function(self, button, x, y, presses, touch)
@@ -145,6 +149,7 @@ gui.classbase = {
 		for i=len, 1, -1 do
 			local child = self.children[i]
 			if
+				child.visible and
 				x >= child.x+(self.ix or 0) and
 				x < child.x+child.w+(self.ix or 0) and
 				y >= child.y+(self.iy or 0) and
@@ -187,6 +192,7 @@ gui.classbase = {
 		for i=len, 1, -1 do
 			local child = self.children[i]
 			if
+				child.visible and
 				child ~= gui.mouseDown and
 				x >= child.x+(self.ix or 0) and
 				x < child.x+child.w+(self.ix or 0) and

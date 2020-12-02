@@ -21,6 +21,9 @@ function love.load()
 	g:append(i)
 	wbui.root:append(g)
 	b = wbui.new("button", "normal", 200, 100)
+	function b:onClick()
+		debug.debug()
+	end
 	wbui.root:append(b)
 	c = wbui.new("button", "hover", 200, 125)
 	c.hover = true
