@@ -32,6 +32,17 @@ function gui.initialize(tbl)
 		buttonShadow = {0.52, 0.52, 0.52},
 		buttonShadow2 = {0.251, 0.251, 0.251},
 		buttonText = {0, 0, 0},
+		dropdownBackground = {1, 1, 1},
+		dropdownHighlight = {1, 1, 1},
+		dropdownHighlight2 = {0.831, 0.816, 0.784},
+		dropdownShadow = {0.52, 0.52, 0.52},
+		dropdownShadow2 = {0.251, 0.251, 0.251},
+		dropdownText = {0, 0, 0},
+		dropdownListBorder = {0, 0, 0},
+		dropdownListBackground = {1, 1, 1},
+		dropdownListForeground = {0, 0, 0},
+		dropdownListHighlightedBackground = {0.039, 0.141, 0.416},
+		dropdownListHighlightedForeground = {1, 1, 1},
 	}
 	for k, v in pairs(tbl.colors or {}) do
 		gui.colors[k] = v
@@ -56,12 +67,44 @@ function gui.initialize(tbl)
 		gui.cursors[k] = v
 	end
 	gui.cursors.__index = gui.cursors
+	gui.images = {
+		windowButtons = {
+			close = gui.path.."/assets/close.png",
+			maximize = gui.path.."/assets/maximize.png",
+			unmaximize = gui.path.."/assets/unmaximize.png",
+			minimize = gui.path.."/assets/minimize.png",
+			help = gui.path.."/assets/help.png"
+		},
+		dropdownArrow = gui.path.."/assets/dropdown.png"
+	}
+	for k, v in pairs(tbl.images or {}) do
+		if type(v) == "table" then
+			for l, w in pairs(v) do
+				v[l] = w
+			end
+		else
+			gui.images[k] = v
+		end
+	end
+	for k, v in pairs(gui.images) do
+		if type(v) == "table" then
+			for l, w in pairs(v) do
+				v[l] = love.graphics.newImage(w)
+			end
+			v.__index = v
+		else
+			gui.images[k] = love.graphics.newImage(v)
+		end
+	end
+	gui.images.__index = gui.images
 	for _, widget in ipairs(tbl.classes or {
 		"frame",
 		"button",
 		"imagebutton",
 		"window",
-		"label"
+		"label",
+		"dropdown_list",
+		"dropdown"
 	}) do
 		gui.classes[widget] = require(gui.require..".widgets."..widget)(gui)
 	end
@@ -75,7 +118,8 @@ function gui.initialize(tbl)
 	}, gui.classbase)
 	function gui.root:mouseUp(button, x, y, presses, touch)
 		if gui.mouseDown then
-			local el = gui.mouseDown:mouseUp(button, x, y, presses, touch)
+			local px, py = gui.mouseDown:getAbsolutePosition()
+			local el = gui.mouseDown:mouseUp(button, x-px, y-py, presses, touch)
 			if el then
 				return el
 			end
@@ -84,7 +128,8 @@ function gui.initialize(tbl)
 	end
 	function gui.root:mouseMoved(x, y, dx, dy, touch)
 		if gui.mouseDown then
-			local el = gui.mouseDown:mouseMoved(x, y, dx, dy, touch)
+			local px, py = gui.mouseDown:getAbsolutePosition()
+			local el = gui.mouseDown:mouseMoved(x-px, y-py, dx, dy, touch)
 			if el then
 				return el
 			end
@@ -115,10 +160,11 @@ gui.classbase = {
 			table.insert(self.children, child)
 		end
 	end,
+	onRemove = function() end,
 	remove = function(self)
 		if self.parent then
 			for i, child in pairs(self.parent.children) do
-				if child == self then
+				if child == self and not self:onRemove() then
 					table.remove(self.parent.children, i)
 					self.parent = nil
 					return true
@@ -150,12 +196,15 @@ gui.classbase = {
 			local child = self.children[i]
 			if
 				child.visible and
-				x >= child.x+(self.ix or 0) and
-				x < child.x+child.w+(self.ix or 0) and
-				y >= child.y+(self.iy or 0) and
-				y < child.y+child.h+(self.iy or 0)
+				x >= child.x and
+				x < child.x+child.w and
+				y >= child.y and
+				y < child.y+child.h
 			then
-				local el = child:mouseDown(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), presses, touch)
+				if gui.modal and child ~= gui.modal and not gui.modal:onModalExit(child) then
+					return false
+				end
+				local el = child:mouseDown(button, x-child.x-(child.ix or 0), y-child.y-(child.iy or 0), presses, touch)
 				if el then
 					return el
 				end
@@ -170,13 +219,14 @@ gui.classbase = {
 		for i=len, 1, -1 do
 			local child = self.children[i]
 			if
+				child.visible and
 				child ~= gui.mouseDown and
-				x >= child.x+(self.ix or 0) and
-				x < child.x+child.w+(self.ix or 0) and
-				y >= child.y+(self.iy or 0) and
-				y < child.y+child.h+(self.iy or 0)
+				x >= child.x and
+				x < child.x+child.w and
+				y >= child.y and
+				y < child.y+child.h
 			then
-				local el = child:mouseUp(button, x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), presses, touch)
+				local el = child:mouseUp(button, x-child.x-(child.ix or 0), y-child.y-(child.iy or 0), presses, touch)
 				if el then
 					return el
 				end
@@ -194,12 +244,12 @@ gui.classbase = {
 			if
 				child.visible and
 				child ~= gui.mouseDown and
-				x >= child.x+(self.ix or 0) and
-				x < child.x+child.w+(self.ix or 0) and
-				y >= child.y+(self.iy or 0) and
-				y < child.y+child.h+(self.iy or 0)
+				x >= child.x and
+				x < child.x+child.w and
+				y >= child.y and
+				y < child.y+child.h
 			then
-				child:mouseMoved(x-child.x+(self.ix or 0), y-child.y+(self.ix or 0), dx, dy, presses, touch)
+				child:mouseMoved(x-child.x-(child.ix or 0), y-child.y-(child.iy or 0), dx, dy, presses, touch)
 				ret = child
 				break
 			end
@@ -218,7 +268,15 @@ gui.classbase = {
 		return ret
 	end,
 	mouseEnter = function(self, x, y, dx, dy, touch) end,
-	mouseLeave = function(self, x, y, dx, dy, touch) end
+	mouseLeave = function(self, x, y, dx, dy, touch) end,
+	getAbsolutePosition = function(self)
+		if self.parent then
+			local x, y = self.parent:getAbsolutePosition()
+			return self.x+(self.ix or 0)+x, self.y+(self.iy or 0)+y
+		else
+			return 0, 0
+		end
+	end
 }
 gui.classbase.__index = gui.classbase
 function gui.class(name, extends)

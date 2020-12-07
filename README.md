@@ -3,6 +3,22 @@
 
 A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system written in pure Lua for the [LÖVE](https://love2d.org/) game engine.
 
+## Completion
+**This library is not quite ready for actual use yet, but I'd like it to be soon!**
+- [x] Window
+- [x] Button
+- [x] Label
+- [x] Dropdown list
+- [ ] Text input
+- [ ] Spinner
+- [ ] Checkbox
+- [ ] Radio buttons
+- [ ] Progress bar
+- [ ] Slider
+- [ ] Scrolling
+- [ ] Context menu
+- [ ] Easy element arranging
+
 ## Usage
 See `main.lua` for example usage. **Note that WBUI makes some assumptions about its path.** If you require WBUI with `require("foo.bar")`, WBUI will assume it is located at `foo/bar`. If this is not the case, you need to manually override `wbui.path` to refer to the correct path *before* calling `wbui.initialize`.
 
@@ -10,8 +26,6 @@ See `main.lua` for example usage. **Note that WBUI makes some assumptions about 
 This library is licensed under the zlib license. For more information, see `LICENSE.txt`. **This software is offered with no warranty. If it ruins your project or burns your house down, it's not my problem.**
 
 **The default theme is designed to resemble the Windows Classic theme.** Given how simple the theme is and the fact respected projects such as [Wine](https://i.imgur.com/PHNGyHO.png) and [ReactOS](https://reactos.org/sites/default/files/linter.png) comfortably reimplement the same theme and claim legality, I don't think this is a problem. If you disagree, consider making a fork or pull request to change it.
-
-[`calculator.png` is a public domain image by the Tango Desktop Project.](https://commons.wikimedia.org/wiki/File:Accessories-calculator.svg)
 
 ## Documentation
 For something as simple as this, I'd recommend following the mantra of "The code *is* the documentation."
@@ -36,6 +50,8 @@ Sets own X and Y coordinates relative to parent. Defaults to 0, 0.
 Add new child at specified index, or at the end if no index is specified.
 #### element:remove()
 Removes self from parent (if applicable). Does not actually destroy the object, so if you don't plan on respawning the window, you need to get rid of all references to it to avoid a memory leak.
+#### element:getAbsolutePosition()
+Returns the position of the element relative to the screen.
 #### element:update(**number**: dt)
 Calls itself on all of its children.
 #### element:draw()
@@ -102,3 +118,11 @@ Displays text.
 If text is not specified, "Label" will be used. If height is not specified, it will be calculated with `label:calculateHeight`.
 #### label:calculateHeight(optional **number**: width)
 Returns the calculated height of the text. Uses current width if not specified.
+### dropdown
+A [https://en.wikipedia.org/wiki/Drop-down_list](dropdown menu). Supports the traditional method of clicking twice to select the option, also supports holding down, hovering over choice, and releasing. No keyboard support yet. Internally uses the undocumented `dropdown_list` class.
+#### dropdown:initialize(**array**: options, **number**: x, **number**: y, optional **number**: width, optional **number**: height)
+Options parameter mustn't be empty. Defaults to 229×23.
+#### dropdown:select(**number**: index)
+Selects the specified index from the options.
+#### dropdown:onSelect(**number**: index, **string**: value)
+Called when a value is selected.

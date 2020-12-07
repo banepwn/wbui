@@ -39,8 +39,8 @@ return function(gui)
 			local h = gui.fonts.default:getHeight()
 			love.graphics.print(
 				self.text,
-				math.ceil((self.w-w)/2-0.5)+(self.active and 1 or 0),
-				math.ceil((self.h-h)/2-0.5)+(self.active and 1 or 0)-1
+				(self.ix or math.ceil((self.w-w)/2-0.5))+(self.active and 1 or 0),
+				(self.iy or math.ceil((self.h-h)/2-0.5)-1)+(self.active and 1 or 0)
 			)
 		end
 		gui.classbase.draw(self)

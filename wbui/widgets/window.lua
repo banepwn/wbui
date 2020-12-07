@@ -10,6 +10,7 @@ return function(gui)
 		self.colors = setmetatable({}, gui.colors)
 		self.fonts = setmetatable({}, gui.fonts)
 		self.cursors = setmetatable({}, gui.cursors)
+		self.buttonIcons = setmetatable({}, gui.images.windowButtons)
 		self:generateTitleBar()
 		self.focus = true
 		self.window = true
@@ -37,6 +38,8 @@ return function(gui)
 		self:bringToFront()
 		self.resizing = false
 		local el = gui.classbase.mouseDown(self, button, x, y, presses, touch)
+		x = x+self.ix
+		y = y+self.iy
 		if el then
 			return el
 		elseif
@@ -108,6 +111,8 @@ return function(gui)
 		end
 	end
 	function elclass:mouseMoved(x, y, dx, dy, touch)
+		x = x+self.ix
+		y = y+self.iy
 		if self.resizing then
 			local nw = math.max(self.w+dx*self.rx, 76)
 			if self.rx < 0 then
@@ -178,13 +183,6 @@ return function(gui)
 	end
 	function elclass:minimize() end
 	function elclass:help() end
-	elclass.buttonIcons = {
-		close = love.graphics.newImage(gui.path.."/assets/close.png"),
-		maximize = love.graphics.newImage(gui.path.."/assets/maximize.png"),
-		unmaximize = love.graphics.newImage(gui.path.."/assets/unmaximize.png"),
-		minimize = love.graphics.newImage(gui.path.."/assets/minimize.png"),
-		help = love.graphics.newImage(gui.path.."/assets/help.png")
-	}
 	elclass.buttonClickHandlers = {
 		close = function(self)
 			self.parent:close()
@@ -204,6 +202,8 @@ return function(gui)
 		if bool and not self[key] then
 			self[key] = gui.new("imagebutton", self.buttonIcons[name], self.w-25, -18, 16, 14)
 			self[key].onClick = self.buttonClickHandlers[name]
+			self[key].ix = 0
+			self[key].iy = 0
 			self:append(self[key])
 		elseif not bool and self[key] then
 			self[key]:remove()

@@ -39,8 +39,8 @@ return function(gui)
 			love.graphics.setColor(1, 1, 1)
 			love.graphics.draw(
 				self.image,
-				math.ceil((self.w-self.image:getWidth())/2-0.5)+(self.active and 1 or 0),
-				math.ceil((self.h-self.image:getHeight())/2-0.5)+(self.active and 1 or 0)
+				(self.ix or math.ceil((self.w-self.image:getWidth())/2-0.5))+(self.active and 1 or 0),
+				(self.iy or math.ceil((self.h-self.image:getHeight())/2-0.5))+(self.active and 1 or 0)
 			)
 		end
 		gui.classbase.draw(self)
