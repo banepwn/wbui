@@ -119,7 +119,7 @@ If text is not specified, "Label" will be used. If height is not specified, it w
 #### label:calculateHeight(optional **number**: width)
 Returns the calculated height of the text. Uses current width if not specified.
 ### dropdown
-A [https://en.wikipedia.org/wiki/Drop-down_list](dropdown menu). Supports the traditional method of clicking twice to select the option, also supports holding down, hovering over choice, and releasing. No keyboard support yet. Internally uses the undocumented `dropdown_list` class.
+A [dropdown menu](https://en.wikipedia.org/wiki/Drop-down_list). Supports the traditional method of clicking twice to select the option, also supports holding down, hovering over choice, and releasing. No keyboard support yet. Internally uses the undocumented `dropdown_list` class.
 #### dropdown:initialize(**array**: options, **number**: x, **number**: y, optional **number**: width, optional **number**: height)
 Options parameter mustn't be empty. Defaults to 229×23.
 #### dropdown:select(**number**: index)
