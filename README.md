@@ -9,6 +9,8 @@ A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system 
 - [x] Button
 - [x] Label
 - [x] Dropdown list
+- [ ] Keyboard accessibility
+- [ ] Easier element placement
 - [ ] Text input
 - [ ] Spinner
 - [ ] Checkbox
@@ -17,7 +19,6 @@ A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system 
 - [ ] Slider
 - [ ] Scrolling
 - [ ] Context menu
-- [ ] Easy element arranging
 
 ## Usage
 See `main.lua` for example usage. **Note that WBUI makes some assumptions about its path.** If you require WBUI with `require("foo.bar")`, WBUI will assume it is located at `foo/bar`. If this is not the case, you need to manually override `wbui.path` to refer to the correct path *before* calling `wbui.initialize`.
