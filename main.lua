@@ -9,7 +9,9 @@ function love.load()
 	demo:showButton('close', true)
 	demo:showButton('maximize', true)
 	demo:showButton('minimize', true)
+	demo.minimizebtn.enabled = false
 	demo:showButton('help', true)
+	demo.helpbtn.enabled = false
 	local demo_label = wbui.new('label', "Greetings from WBUI", 3, 3, 294)
 	demo:append(demo_label)
 	local demo_button = wbui.new('button', "Click me!", 3, 18)

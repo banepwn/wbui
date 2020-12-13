@@ -15,6 +15,7 @@ return function(gui)
 		self.hover = false
 		self.enabled = true
 	end
+	elclass.shader = love.graphics.newShader(gui.path.."/imagebutton.glsl")
 	function elclass:draw()
 		love.graphics.setColor(unpack(self.colors.buttonBackground))
 		love.graphics.rectangle("fill", 0, 0, self.w, self.h)
@@ -36,12 +37,19 @@ return function(gui)
 			love.graphics.line(self.w-1.5, 0.5, self.w-1.5, self.h-1.5, 1.5, self.h-1.5)
 		end
 		if self.image then
-			love.graphics.setColor(1, 1, 1)
-			love.graphics.draw(
-				self.image,
-				(self.ix or math.ceil((self.w-self.image:getWidth())/2-0.5))+(self.active and 1 or 0),
-				(self.iy or math.ceil((self.h-self.image:getHeight())/2-0.5))+(self.active and 1 or 0)
-			)
+			local x = (self.ix or math.ceil((self.w-self.image:getWidth())/2-0.5))+(self.active and 1 or 0)
+			local y = (self.iy or math.ceil((self.h-self.image:getHeight())/2-0.5))+(self.active and 1 or 0)
+			if self.enabled then
+				love.graphics.setColor(self.colors.buttonImage)
+				love.graphics.draw(self.image, x, y)
+			else
+				love.graphics.setShader(self.shader)
+					love.graphics.setColor(self.colors.buttonImageDisabledShadow)
+					love.graphics.draw(self.image, x+1, y+1)
+					love.graphics.setColor(self.colors.buttonImageDisabled)
+					love.graphics.draw(self.image, x, y)
+				love.graphics.setShader()
+			end
 		end
 		gui.classbase.draw(self)
 	end
