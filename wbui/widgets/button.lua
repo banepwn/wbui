@@ -33,15 +33,15 @@ return function(gui)
 			love.graphics.line(self.w-1.5, 0.5, self.w-1.5, self.h-1.5, 1.5, self.h-1.5)
 		end
 		if self.text then
-			love.graphics.setColor(unpack(self.colors.buttonText))
+			local x = (self.ix or math.ceil((self.w-gui.fonts.default:getWidth(self.text))/2-0.5))+(self.active and 1 or 0)
+			local y = (self.iy or math.ceil((self.h-gui.fonts.default:getHeight())/2-0.5)-1)+(self.active and 1 or 0)
 			love.graphics.setFont(self.fonts.default)
-			local w = gui.fonts.default:getWidth(self.text)
-			local h = gui.fonts.default:getHeight()
-			love.graphics.print(
-				self.text,
-				(self.ix or math.ceil((self.w-w)/2-0.5))+(self.active and 1 or 0),
-				(self.iy or math.ceil((self.h-h)/2-0.5)-1)+(self.active and 1 or 0)
-			)
+			if not self.enabled then
+				love.graphics.setColor(self.colors.buttonTextDisabledShadow)
+				love.graphics.print(self.text, x+1, y+1)
+			end
+			love.graphics.setColor(self.enabled and self.colors.buttonText or self.colors.buttonTextDisabled)
+			love.graphics.print(self.text, x, y)
 		end
 		gui.classbase.draw(self)
 	end

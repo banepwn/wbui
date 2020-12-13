@@ -32,6 +32,8 @@ function gui.initialize(tbl)
 		buttonShadow = {0.52, 0.52, 0.52},
 		buttonShadow2 = {0.251, 0.251, 0.251},
 		buttonText = {0, 0, 0},
+		buttonTextDisabled = {0.52, 0.52, 0.52},
+		buttonTextDisabledShadow = {1, 1, 1},
 		dropdownBackground = {1, 1, 1},
 		dropdownHighlight = {1, 1, 1},
 		dropdownHighlight2 = {0.831, 0.816, 0.784},

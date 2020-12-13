@@ -19,6 +19,9 @@ function love.load()
 		self.text = "That's "..n.."!"
 	end
 	demo:append(demo_button)
+	local demo_button2 = wbui.new('button', "Can't click this", 81, 18, 100)
+	demo_button2.enabled = false
+	demo:append(demo_button2)
 	local demo_dropdown = wbui.new('dropdown', {
 		"Alice",
 		"Bob",
