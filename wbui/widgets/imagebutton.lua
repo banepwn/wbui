@@ -13,7 +13,7 @@ return function(gui)
 		self.fonts = setmetatable({}, gui.fonts)
 		self.active = false
 		self.hover = false
-		self.enabled = true
+		self:setEnabled(true)
 	end
 	elclass.shader = love.graphics.newShader(gui.path.."/imagebutton.glsl")
 	function elclass:draw()
@@ -21,20 +21,28 @@ return function(gui)
 		love.graphics.rectangle("fill", 0, 0, self.w, self.h)
 		love.graphics.setLineWidth(1)
 		love.graphics.setLineStyle("rough")
-		if self.active then
-			love.graphics.setColor(unpack(self.colors.buttonHighlight))
-			love.graphics.line(self.w-0.5, -0.5, self.w-0.5, self.h-0.5, 0.5, self.h-0.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow2))
-			love.graphics.line(self.w-0.5, 0.5, 0.5, 0.5, 0.5, self.h-1.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow))
-			love.graphics.line(self.w-1.5, 1.5, 1.5, 1.5, 1.5, self.h-2.5)
+		local o
+		if self.focus then
+			love.graphics.setColor(self.colors.buttonFocusOutline)
+			love.graphics.line(self.w-0.5, -0.5, self.w-0.5, self.h-0.5, 0.5, self.h-0.5, 0.5, 0.5, self.w-0.5, 0.5)
+			o = 1
 		else
-			love.graphics.setColor(unpack(self.colors.buttonHighlight))
-			love.graphics.line(self.w-0.5, 0.5, 0.5, 0.5, 0.5, self.h-1.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow2))
-			love.graphics.line(self.w-0.5, -0.5, self.w-0.5, self.h-0.5, 0.5, self.h-0.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow))
-			love.graphics.line(self.w-1.5, 0.5, self.w-1.5, self.h-1.5, 1.5, self.h-1.5)
+			o = 0
+		end
+		if self.active then
+			love.graphics.setColor(self.colors.buttonHighlight)
+			love.graphics.line(self.w-0.5-o, -0.5+o, self.w-0.5-o, self.h-0.5-o, 0.5+o, self.h-0.5-o)
+			love.graphics.setColor(self.colors.buttonShadow2)
+			love.graphics.line(self.w-0.5-o, 0.5+o, 0.5+o, 0.5+o, 0.5+o, self.h-1.5-o)
+			love.graphics.setColor(self.colors.buttonShadow)
+			love.graphics.line(self.w-1.5-o, 1.5+o, 1.5+o, 1.5+o, 1.5+o, self.h-2.5-o)
+		else
+			love.graphics.setColor(self.colors.buttonHighlight)
+			love.graphics.line(self.w-0.5-o, 0.5+o, 0.5+o, 0.5+o, 0.5+o, self.h-1.5-o)
+			love.graphics.setColor(self.colors.buttonShadow2)
+			love.graphics.line(self.w-0.5-o, -0.5+o, self.w-0.5-o, self.h-0.5-o, 0.5+o, self.h-0.5-o)
+			love.graphics.setColor(self.colors.buttonShadow)
+			love.graphics.line(self.w-1.5-o, 0.5+o, self.w-1.5-o, self.h-1.5-o, 1.5+o, self.h-1.5-o)
 		end
 		if self.image then
 			local x = (self.ix or math.ceil((self.w-self.image:getWidth())/2-0.5))+(self.active and 1 or 0)

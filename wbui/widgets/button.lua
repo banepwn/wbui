@@ -10,27 +10,44 @@ return function(gui)
 		self.fonts = setmetatable({}, gui.fonts)
 		self.active = false
 		self.hover = false
-		self.enabled = true
+		self:setEnabled(true)
+	end
+	function elclass:setEnabled(bool)
+		self.enabled = bool
+		self.tabindex = bool
+		if bool then
+			if self.parent then
+				self.parent:updateTabIndexes()
+			end
+		end
 	end
 	function elclass:draw()
-		love.graphics.setColor(unpack(self.colors.buttonBackground))
+		love.graphics.setColor(self.colors.buttonBackground)
 		love.graphics.rectangle("fill", 0, 0, self.w, self.h)
 		love.graphics.setLineWidth(1)
 		love.graphics.setLineStyle("rough")
-		if self.active then
-			love.graphics.setColor(unpack(self.colors.buttonHighlight))
-			love.graphics.line(self.w-0.5, -0.5, self.w-0.5, self.h-0.5, 0.5, self.h-0.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow2))
-			love.graphics.line(self.w-0.5, 0.5, 0.5, 0.5, 0.5, self.h-1.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow))
-			love.graphics.line(self.w-1.5, 1.5, 1.5, 1.5, 1.5, self.h-2.5)
+		local o
+		if self.focus then
+			love.graphics.setColor(self.colors.buttonFocusOutline)
+			love.graphics.line(self.w-0.5, -0.5, self.w-0.5, self.h-0.5, 0.5, self.h-0.5, 0.5, 0.5, self.w-0.5, 0.5)
+			o = 1
 		else
-			love.graphics.setColor(unpack(self.colors.buttonHighlight))
-			love.graphics.line(self.w-0.5, 0.5, 0.5, 0.5, 0.5, self.h-1.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow2))
-			love.graphics.line(self.w-0.5, -0.5, self.w-0.5, self.h-0.5, 0.5, self.h-0.5)
-			love.graphics.setColor(unpack(self.colors.buttonShadow))
-			love.graphics.line(self.w-1.5, 0.5, self.w-1.5, self.h-1.5, 1.5, self.h-1.5)
+			o = 0
+		end
+		if self.active then
+			love.graphics.setColor(self.colors.buttonHighlight)
+			love.graphics.line(self.w-0.5-o, -0.5+o, self.w-0.5-o, self.h-0.5-o, 0.5+o, self.h-0.5-o)
+			love.graphics.setColor(self.colors.buttonShadow2)
+			love.graphics.line(self.w-0.5-o, 0.5+o, 0.5+o, 0.5+o, 0.5+o, self.h-1.5-o)
+			love.graphics.setColor(self.colors.buttonShadow)
+			love.graphics.line(self.w-1.5-o, 1.5+o, 1.5+o, 1.5+o, 1.5+o, self.h-2.5-o)
+		else
+			love.graphics.setColor(self.colors.buttonHighlight)
+			love.graphics.line(self.w-0.5-o, 0.5+o, 0.5+o, 0.5+o, 0.5+o, self.h-1.5-o)
+			love.graphics.setColor(self.colors.buttonShadow2)
+			love.graphics.line(self.w-0.5-o, -0.5+o, self.w-0.5-o, self.h-0.5-o, 0.5+o, self.h-0.5-o)
+			love.graphics.setColor(self.colors.buttonShadow)
+			love.graphics.line(self.w-1.5-o, 0.5+o, self.w-1.5-o, self.h-1.5-o, 1.5+o, self.h-1.5-o)
 		end
 		if self.text then
 			local x = (self.ix or math.ceil((self.w-gui.fonts.default:getWidth(self.text))/2-0.5))+(self.active and 1 or 0)
@@ -49,8 +66,11 @@ return function(gui)
 		if button ~= 1 then
 			return
 		end
-		self.active = self.enabled
-		gui.mouseDown = self
+		if self.enabled then
+			self.active = true
+			self:bringToFront()
+			gui.mouseDown = self
+		end
 		return self
 	end
 	function elclass:mouseUp(button, x, y)

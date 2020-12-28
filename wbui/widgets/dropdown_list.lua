@@ -1,5 +1,6 @@
 return function(gui)
 	local elclass = gui.class('dropdown_list')
+	elclass.tabindex = true
 	elclass.tx = 3
 	function elclass:initialize(parent, highlighted)
 		self.colors = setmetatable({}, gui.colors)
@@ -9,7 +10,7 @@ return function(gui)
 		gui.root:append(self)
 		self.visible = false
 	end
-	function elclass:focus()
+	function elclass:bringToFront()
 		local parent = self.dfparent
 		self.x, self.y = parent:getAbsolutePosition()
 		self.x = self.x+parent.rx
@@ -17,13 +18,13 @@ return function(gui)
 		self.w = parent.rw or parent.w
 		self.th = parent.rh or parent.h
 		self.h = self.th*#parent.values
-		local children = self.parent.children
-		local maxindex = #children
-		for i, child in pairs(children) do
-			if child == self then
+		local siblings = self.parent.children
+		local maxindex = #siblings
+		for i, sibling in pairs(siblings) do
+			if sibling == self then
 				if i ~= maxindex then
-					table.remove(children, i)
-					children[maxindex] = self
+					table.remove(siblings, i)
+					siblings[maxindex] = self
 				end
 				break
 			end
@@ -49,6 +50,15 @@ return function(gui)
 	end
 	function elclass:mouseExit()
 		self.highlighted = nil
+	end
+	function elclass:keyDown(key, scan, repeated)
+		if key == 'up' then
+			self.highlighted = self.highlighted and (self.highlighted-2)%#self.dfparent.values+1 or #self.dfparent.values
+		elseif key == 'down' then
+			self.highlighted = self.highlighted and self.highlighted%#self.dfparent.values+1 or 1
+		elseif key == 'return' or key == 'space' then
+			self.dfparent:select(self.highlighted)
+		end
 	end
 	function elclass:draw()
 		local ax, ay = self:getAbsolutePosition()

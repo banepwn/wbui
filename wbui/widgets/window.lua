@@ -18,24 +18,11 @@ return function(gui)
 		self.resizable = true
 		self.resizing = false
 	end
-	function elclass:bringToFront()
-		self.focus = true
-		local i
-		for j=1, #self.parent.children do
-			local child = self.parent.children[j]
-			if child == self then
-				i = j
-			elseif child.name == "window" then
-				child.focus = false
-			end
-		end
-		table.insert(self.parent.children, table.remove(self.parent.children, i))
-	end
 	function elclass:mouseDown(button, x, y, presses, touch)
-		if button ~= 1 then
-			return
-		end
 		self:bringToFront()
+		if button ~= 1 then
+			return gui.classbase.mouseDown(self, button, x, y, presses, touch) or self
+		end
 		self.resizing = false
 		local el = gui.classbase.mouseDown(self, button, x, y, presses, touch)
 		x = x+self.ix
@@ -107,7 +94,7 @@ return function(gui)
 			gui.mouseDown = nil
 			self.resizing = false
 		else
-			return gui.classbase.mouseUp(self, button, x, y, presses, touch)
+			return gui.classbase.mouseUp(self, button, x, y, presses, touch) or self
 		end
 	end
 	function elclass:mouseMoved(x, y, dx, dy, touch)
@@ -130,7 +117,7 @@ return function(gui)
 			self.x = self.x+dx
 			self.y = self.y+dy
 			return true
-		else
+		elseif self.resizable then
 			self:updateCursor(x, y)
 		end
 	end
@@ -200,11 +187,13 @@ return function(gui)
 	function elclass:showButton(name, bool)
 		local key = name.."btn"
 		if bool and not self[key] then
-			self[key] = gui.new("imagebutton", self.buttonIcons[name], self.w-25, -18, 16, 14)
-			self[key].onClick = self.buttonClickHandlers[name]
-			self[key].ix = 0
-			self[key].iy = 0
-			self:append(self[key])
+			local btn = gui.new("imagebutton", self.buttonIcons[name], self.w-25, -18, 16, 14)
+			btn.onClick = self.buttonClickHandlers[name]
+			btn.ix = 0
+			btn.iy = 0
+			btn.tabindex = false
+			self[key] = btn
+			self:append(btn)
 		elseif not bool and self[key] then
 			self[key]:remove()
 			self[key] = nil
@@ -266,17 +255,17 @@ return function(gui)
 		}, "strip", "static")
 	end
 	function elclass:draw()
-		love.graphics.setColor(unpack(self.colors.frameBackground))
+		love.graphics.setColor(self.colors.frameBackground)
 		love.graphics.rectangle("fill", 0, 0, self.w, self.h)
 		love.graphics.setLineWidth(1)
 		love.graphics.setLineStyle("rough")
-		love.graphics.setColor(unpack(self.colors.frameHighlight2))
+		love.graphics.setColor(self.colors.frameHighlight2)
 		love.graphics.line(self.w-0.5, 0.5, 0.5, 0.5, 0.5, self.h-1.5)
-		love.graphics.setColor(unpack(self.colors.frameHighlight))
+		love.graphics.setColor(self.colors.frameHighlight)
 		love.graphics.line(self.w-1.5, 1.5, 1.5, 1.5, 1.5, self.h-2.5)
-		love.graphics.setColor(unpack(self.colors.frameShadow2))
+		love.graphics.setColor(self.colors.frameShadow2)
 		love.graphics.line(self.w-0.5, -0.5, self.w-0.5, self.h-0.5, 0.5, self.h-0.5)
-		love.graphics.setColor(unpack(self.colors.frameShadow))
+		love.graphics.setColor(self.colors.frameShadow)
 		love.graphics.line(self.w-1.5, 0.5, self.w-1.5, self.h-1.5, 1.5, self.h-1.5)
 		love.graphics.setColor(1, 1, 1)
 		love.graphics.draw(self.focus and self.titlebar or self.titlebarInactive, 3, 3, 0, (self.w-6)/1, 18/1)

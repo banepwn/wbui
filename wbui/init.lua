@@ -1,7 +1,7 @@
 local gui = {}
 
 gui.require = ...
-gui.path = gui.require:gsub("%.", "/")
+gui.path = gui.require and gui.require:gsub("%.", "/")
 function gui.initialize(tbl)
 	tbl = tbl or {}
 	local default = (tbl.fonts or {}).default or love.graphics.newFont(11)
@@ -37,12 +37,15 @@ function gui.initialize(tbl)
 		buttonImage = {1, 1, 1},
 		buttonImageDisabled = {0.52, 0.52, 0.52},
 		buttonImageDisabledShadow = {1, 1, 1},
-		dropdownBackground = {1, 1, 1},
+		buttonFocusOutline = {0, 0, 0},
 		dropdownHighlight = {1, 1, 1},
 		dropdownHighlight2 = {0.831, 0.816, 0.784},
 		dropdownShadow = {0.52, 0.52, 0.52},
 		dropdownShadow2 = {0.251, 0.251, 0.251},
+		dropdownBackground = {1, 1, 1},
+		dropdownBackgroundFocus = {0.039, 0.141, 0.416},
 		dropdownText = {0, 0, 0},
+		dropdownTextFocus = {1, 1, 1},
 		dropdownListBorder = {0, 0, 0},
 		dropdownListBackground = {1, 1, 1},
 		dropdownListForeground = {0, 0, 0},
@@ -140,6 +143,18 @@ function gui.initialize(tbl)
 			end
 		end
 		return gui.classbase.mouseMoved(self, x, y, dx, dy, touch)
+	end
+	function gui.root:keyDown(key, scan, repeated)
+		local focusedChild = self.focusedChild
+		if focusedChild then
+			return focusedChild:keyDown(key, scan, repeated)
+		end
+	end
+	function gui.root:keyUp(key, scan)
+		local focusedChild = self.focusedChild
+		if focusedChild then
+			return focusedChild:keyUp(key, scan)
+		end
 	end
 end
 
@@ -272,8 +287,8 @@ gui.classbase = {
 		end
 		return ret
 	end,
-	mouseEnter = function(self, x, y, dx, dy, touch) end,
-	mouseLeave = function(self, x, y, dx, dy, touch) end,
+	mouseEnter = function() end,
+	mouseLeave = function() end,
 	getAbsolutePosition = function(self)
 		if self.parent then
 			local x, y = self.parent:getAbsolutePosition()
@@ -281,6 +296,24 @@ gui.classbase = {
 		else
 			return 0, 0
 		end
+	end,
+	keyDown = function() end,
+	keyUp = function() end,
+	bringToFront = function(self)
+		self.focus = true
+		local i
+		local parent = self.parent
+		parent.focusedChild = self
+		local siblings = parent.children
+		for j=1, #siblings do
+			local sibling = siblings[j]
+			if sibling == self then
+				i = j
+			elseif sibling.tabindex then
+				sibling.focus = false
+			end
+		end
+		parent.focusedChildIndex = i
 	end
 }
 gui.classbase.__index = gui.classbase

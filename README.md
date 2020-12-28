@@ -9,7 +9,7 @@ A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system 
 - [x] Button
 - [x] Label
 - [x] Dropdown list
-- [ ] Keyboard accessibility
+- [x] Keyboard accessibility
 - [ ] Easier element placement
 - [ ] Text input
 - [ ] Spinner
@@ -21,7 +21,7 @@ A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system 
 - [ ] Context menu
 
 ## Usage
-See `main.lua` for example usage. **Note that WBUI makes some assumptions about its path.** If you require WBUI with `require("foo.bar")`, WBUI will assume it is located at `foo/bar`. If this is not the case, you need to manually override `wbui.path` to refer to the correct path *before* calling `wbui.initialize`.
+See `main.lua` for example usage. **Note that WBUI makes some assumptions about its path.** See `wbui.path` in the documentation for details.
 
 ## License
 This library is licensed under the zlib license. For more information, see `LICENSE.txt`. **This software is offered with no warranty. If it ruins your project or burns your house down, it's not my problem.**
@@ -31,7 +31,7 @@ This library is licensed under the zlib license. For more information, see `LICE
 ## Documentation
 For something as simple as this, I'd recommend following the mantra of "The code *is* the documentation."
 ### Global
-#### wbui.new(**string**: element class, **vararg** parameters)
+#### wbui.new(**string**: element class, **vararg**: parameters)
 Creates a new element. Parameters dependent on class. Internally does `return wbui.classes[name]:new(...)`.
 #### wbui.class(**string**: class name, optional **table**: element class)
 Creates a new element class. It may optionally extend another class. This does not add it to `wbui.classes` for use with `wbui.new`, so it is necessary to add it manually.
@@ -42,6 +42,10 @@ Key | Value
 `fonts` | Table of fonts
 `colors` | Table of colors
 `classes` | Array of classes to load
+#### **string**: wbui.require
+The prefix used for calls to `require`. Only needs to be overridden if you loaded WBUI with `dofile` or you changed `package.path` *after* loading WBUI.
+#### **string**: wbui.path
+The path of WBUI. If you require WBUI with `require("foo.bar")`, WBUI will assume it is located at `foo/bar`. If that is not the case, you need to manually override this *before* calling `wbui.initialize`.
 ### element
 #### element:new(**vararg**: parameters)
 Create, initialize, and return a new element. Called by `wbui.new`. Should not be called directly.
@@ -53,26 +57,58 @@ Add new child at specified index, or at the end if no index is specified.
 Removes self from parent (if applicable). Does not actually destroy the object, so if you don't plan on respawning the window, you need to get rid of all references to it to avoid a memory leak.
 #### element:getAbsolutePosition()
 Returns the position of the element relative to the screen.
+#### element:bringToFront()
+Focuses the element and unfocuses all of its siblings.
 #### element:update(**number**: dt)
 Calls itself on all of its children.
 #### element:draw()
-Calls itself on all of its children. Make sure to reset the graphics state to something reasonable before using this or else weird things might happen. `love.graphics.translate` is used to make each child draw relative to its parent.
+Calls itself on all of its children. Make sure to reset the graphics state to something sensible before using this or else weird things might happen. `love.graphics.translate` is used to make each child draw relative to its parent.
 #### element:mouseDown(**number**: button, **number**: x, **number** y, **number** number of clicks in short time, **boolean**, is touch event)
 Calls itself on any child where the cursor is within its bounding box.
 #### element:mouseUp(**number**: button, **number**: x, **number**: y, **number** number of clicks in short time, **boolean**, is touch event)
 Ditto.
 #### element:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
-Ditto, but also calls `element:mouseEnter` and `element:mouseLeave`.
+Calls itself on `wbui.mouseDown` or any child under the cursor. Also calls `element:mouseEnter` and `element:mouseLeave`.
 #### element:mouseEnter(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
-Does nothing. Called when the cursor hovers over the element.
+Does nothing. Called when the cursor starts hovering over the element.
 #### element:mouseLeave(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
 Does nothing. Called when the cursor stops hovering over the element.
-#### wbui.root:mouseUp(**number**: button, **number**: x, **number**: y)
+#### element:keyDown(**string**: key, **string**: scancode, **boolean**: repeated)
+Does nothing. Called when a key is pressed.
+#### element:keyUp(**string**: key, **string**: scancode)
+Does nothing. Called when a key is released.
+#### **number**: element.x
+X position.
+#### **number**: element.y
+Y position.
+#### optional **number**: element.w
+Element width.
+#### optional **number**: element.h
+Element height.
+#### optional **number**: element.ix
+X offset for children.
+#### optional **number**: element.iy
+Y offset for children.
+#### optional **number**: element.iw
+Absolute width for children.
+#### optional **number**: element.ih
+Absolute height for children.
+#### **boolean**: element.active
+Whether the element is currently being interacted with.
+#### **boolean**: element.focus
+Whether the element is in focus.
+#### **boolean**: celement.tabindex
+Whether the element can be focused by pressing Tab.
+### root
+An element kept in `wbui.root` that contains all other elements. This is *not* a frame, and thus cannot be tabbed through. It's also not a class yet.
+#### root:mouseUp(**number**: button, **number**: x, **number**: y)
 Same as `element:mouseUp`, except it will also call itself once on `wbui.mouseDown`, if it exists.
-#### wbui.root:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
+#### root:mouseMoved(**number**: x, **number**: y, **number**: relative x, **number**: relative y, **boolean**: is touch event)
 Same as `element:mouseMoved`, except it will also call itself once on `wbui.mouseDown`, if it exists.
 ### frame
-Like a window, but with less functionality.
+A container for other elements that can be tabbed through.
+#### frame:bringToFront()
+Same as `element:bringToFront`, but it will also arrange itself to be last in its parent's list of children.
 #### frame:initialize(**number**: x, **number**: y, **number**: width, **number**: height)
 Creates a new frame with the corresponding dimensions.
 ### button
@@ -88,9 +124,7 @@ Defaults to 75×23. If image is a string, it will be loaded with `love.graphics.
 ### window
 A window with a title bar and (optional) title bar buttons that can be focused, unfocused, or dragged around.
 #### window:initialize(optional **string**: title, **number**: x, **number**: y, **number**: width, **number**: height)
-Creates a new window. If no title is specified, "Window" will be used. The window will have focus by default, so if you spawn multiple windows at once, you should call `window:bringToFront` on one so that only one is focused.
-#### window:bringToFront()
-Focuses the window and unfocuses any other window with the same parent.
+Creates a new window. If no title is specified, "Window" will be used. Each window will call `frame:bringToFront` on itself on initialization.
 #### window:setMaximized(**boolean**: maximized)
 Sets whether the window is maximized or not. When maximized, the window fills its entire parent and cannot be resized. When unmaximized, the window is restored to is original size.
 #### window:close()
@@ -103,7 +137,7 @@ Calls `window:setMaximized` and updates the button icon.
 Does nothing.
 #### window:help()
 Does nothing.
-#### window:showButton(**string**: name, **boolean** add rather than remove)
+#### window:showButton(**string**: name, **boolean**: add rather than remove)
 Adds (or removes) the title bar button with the specified name and calls `window:updateButtonPositions`. If the name is something other than "close," "maximize," "minimize," or "help," extra work will be needed to make the button work properly. The button's icon and click handler will be determined by the `window.buttonIcons` and `window.buttonClickHandlers` tables. If the icon does not exist, the button will be blank. If the handler does not exist, the button will not have one. The button will be stored in `self[name..'btn']`.
 #### window:updateButtonPositions()
 Updates the position of the title bar buttons. Will ignore any button besides close, maximize, minimize, and help.
@@ -115,7 +149,7 @@ Updates `self.ix`, `self.iy`, `self.iw`, and `self.ih` to correspond with the wi
 Generates the meshes used for the title bar gradient. You only need to call this manually if you update the title bar colors *after* creating the window.
 ### label
 Displays text.
-#### label:initialize(optional **string**: text, **number**: x, **number**: y, **number**: width, optional **number** height)
+#### label:initialize(optional **string**: text, **number**: x, **number**: y, **number**: width, optional **number**: height)
 If text is not specified, "Label" will be used. If height is not specified, it will be calculated with `label:calculateHeight`.
 #### label:calculateHeight(optional **number**: width)
 Returns the calculated height of the text. Uses current width if not specified.
