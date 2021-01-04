@@ -47,5 +47,11 @@ return function(gui)
 			self.focusedChild:keyDown(key, scan, repeated)
 		end
 	end
+	function elclass:keyUp(key, scan)
+		local focusedChild = self.focusedChild
+		if focusedChild then
+			focusedChild:keyUp(key, scan)
+		end
+	end
 	return elclass
 end

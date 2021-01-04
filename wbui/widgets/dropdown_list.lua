@@ -11,6 +11,8 @@ return function(gui)
 		self.visible = false
 	end
 	function elclass:bringToFront()
+		self.focus = true
+		self.visible = true
 		local parent = self.dfparent
 		self.x, self.y = parent:getAbsolutePosition()
 		self.x = self.x+parent.rx
@@ -30,12 +32,13 @@ return function(gui)
 			end
 		end
 		gui.modal = self
-		self.visible = true
 	end
 	function elclass:unfocus()
 		gui.modal = nil
+		self.focus = false
 		self.visible = false
 		self.dfparent.open = false
+		self.dfparent:bringToFront()
 	end
 	elclass.onModalExit = elclass.unfocus
 	function elclass:mouseDown(button, x, y)
@@ -58,6 +61,7 @@ return function(gui)
 			self.highlighted = self.highlighted and self.highlighted%#self.dfparent.values+1 or 1
 		elseif key == 'return' or key == 'space' then
 			self.dfparent:select(self.highlighted)
+			self:unfocus()
 		end
 	end
 	function elclass:draw()

@@ -68,7 +68,9 @@ return function(gui)
 		end
 		if self.enabled then
 			self.active = true
-			self:bringToFront()
+			if self.tabindex then
+				self:bringToFront()
+			end
 			gui.mouseDown = self
 		end
 		return self
@@ -85,5 +87,16 @@ return function(gui)
 		return self
 	end
 	function elclass:onClick() end
+	function elclass:keyDown(key, scan, repeated)
+		if key == 'return' or key == 'space' then
+			self.active = true
+			self:onClick()
+		end
+	end
+	function elclass:keyUp(key, scan)
+		if key == 'return' or key == 'space' then
+			self.active = false
+		end
+	end
 	return elclass
 end
