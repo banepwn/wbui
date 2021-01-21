@@ -5,6 +5,7 @@ A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system 
 
 ## Completion
 **This library is not quite ready for actual use yet, but I'd like it to be soon!**
+
 - [x] Window
 - [x] Button
 - [x] Label
@@ -37,6 +38,7 @@ Creates a new element. Parameters dependent on class. Internally does `return wb
 Creates a new element class. It may optionally extend another class. This does not add it to `wbui.classes` for use with `wbui.new`, so it is necessary to add it manually.
 #### wbui.initialize(optional **table**: configuration data)
 Initializes WBUI.
+
 Key | Value
 --- | ---
 `fonts` | Table of fonts
