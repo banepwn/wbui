@@ -44,6 +44,7 @@ Key | Value
 `fonts` | Table of fonts
 `colors` | Table of colors
 `classes` | Array of classes to load
+
 #### **string**: wbui.require
 The prefix used for calls to `require`. Only needs to be overridden if you loaded WBUI with `dofile` or you changed `package.path` *after* loading WBUI.
 #### **string**: wbui.path
