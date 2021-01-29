@@ -62,6 +62,10 @@ Removes self from parent (if applicable). Does not actually destroy the object, 
 Returns the position of the element relative to the screen.
 #### element:bringToFront()
 Focuses the element and unfocuses all of its siblings.
+#### element:onFocus()
+Called when element is focused with `element:bringToFront`.
+#### element:onFocusLost()
+Called when element is unfocused due to a sibling being focused with `element:bringToFront`.
 #### element:update(**number**: dt)
 Calls itself on all of its children.
 #### element:draw()
@@ -80,6 +84,8 @@ Does nothing. Called when the cursor stops hovering over the element.
 Does nothing. Called when a key is pressed.
 #### element:keyUp(**string**: key, **string**: scancode)
 Does nothing. Called when a key is released.
+#### element:textInput(**string**: text)
+Does nothing. Called when text is entered. Requires `love.keyboard.setTextInput(true)`. UTF-8 encoding.
 #### **number**: element.x
 X position.
 #### **number**: element.y
