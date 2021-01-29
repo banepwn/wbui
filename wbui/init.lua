@@ -112,7 +112,8 @@ function gui.initialize(tbl)
 		"window",
 		"label",
 		"dropdown_list",
-		"dropdown"
+		"dropdown",
+		"textbox"
 	}) do
 		gui.classes[widget] = require(gui.require..".widgets."..widget)(gui)
 	end
@@ -154,6 +155,12 @@ function gui.initialize(tbl)
 		local focusedChild = self.focusedChild
 		if focusedChild then
 			return focusedChild:keyUp(key, scan)
+		end
+	end
+	function gui.root:textInput(text)
+		local focusedChild = self.focusedChild
+		if focusedChild then
+			return focusedChild:textInput(text)
 		end
 	end
 end
@@ -299,6 +306,7 @@ gui.classbase = {
 	end,
 	keyDown = function() end,
 	keyUp = function() end,
+	textInput = function() end,
 	bringToFront = function(self)
 		self.focus = true
 		local i
