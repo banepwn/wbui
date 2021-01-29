@@ -53,5 +53,11 @@ return function(gui)
 			focusedChild:keyUp(key, scan)
 		end
 	end
+	function elclass:textInput(text)
+		local focusedChild = self.focusedChild
+		if focusedChild then
+			focusedChild:textInput(text)
+		end
+	end
 	return elclass
 end

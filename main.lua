@@ -1,6 +1,7 @@
 local demo
 function love.load()
 	love.graphics.setBackgroundColor(0.227, 0.431, 0.647)
+	utf8 = require('utf8')
 	wbui = require('wbui')
 	wbui.initialize({})
 
@@ -12,11 +13,13 @@ function love.load()
 	demo.minimizebtn.enabled = false
 	demo:showButton('help', true)
 	demo.helpbtn.enabled = false
+	
 	local demo_label = wbui.new('label', '', 3, 3, 294)
 	function demo_label:update()
 		demo_label.text = string.format("%d: %s", demo.focusedChildIndex or -1, demo.focusedChild and demo.focusedChild.name or "nil")
 	end
 	demo:append(demo_label)
+	
 	local demo_button = wbui.new('button', "Click me!", 3, 18)
 	function demo_button:onClick()
 		local n = (self.n or 0)+1
@@ -24,9 +27,11 @@ function love.load()
 		self.text = string.format("That's %d!", n)
 	end
 	demo:append(demo_button)
+	
 	local demo_button2 = wbui.new('button', "Can't click this", 81, 18, 100)
 	demo_button2:setEnabled(false)
 	demo:append(demo_button2)
+	
 	local demo_dropdown = wbui.new('dropdown', {
 		"Alice",
 		"Bob",
@@ -34,6 +39,10 @@ function love.load()
 		"Really, "..string.rep("really, ", 10).."long string"
 	}, 3, 43)
 	demo:append(demo_dropdown)
+	
+	local demo_text = wbui.new('textbox', "Hello world", 3, 68)
+	demo:append(demo_text)
+	
 	root:append(demo)
 	demo:bringToFront()
 end
@@ -64,4 +73,8 @@ end
 
 function love.keyreleased(key, scan)
 	wbui.root:keyUp(key, scan)
+end
+
+function love.textinput(text)
+	wbui.root:textInput(text)
 end

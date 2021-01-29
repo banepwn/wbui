@@ -51,6 +51,12 @@ function gui.initialize(tbl)
 		dropdownListForeground = {0, 0, 0},
 		dropdownListHighlightedBackground = {0.039, 0.141, 0.416},
 		dropdownListHighlightedForeground = {1, 1, 1},
+		textboxHighlight = {1, 1, 1},
+		textboxHighlight2 = {0.831, 0.816, 0.784},
+		textboxShadow = {0.52, 0.52, 0.52},
+		textboxShadow2 = {0.251, 0.251, 0.251},
+		textboxBackground = {1, 1, 1},
+		textboxText = {0, 0, 0},
 	}
 	for k, v in pairs(tbl.colors or {}) do
 		gui.colors[k] = v

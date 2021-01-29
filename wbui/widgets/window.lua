@@ -15,7 +15,7 @@ return function(gui)
 		self.focus = true
 		self.window = true
 		self.maximized = false
-		self.resizable = true
+		self.resizable = false
 		self.resizing = false
 	end
 	function elclass:mouseDown(button, x, y, presses, touch)
