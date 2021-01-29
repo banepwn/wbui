@@ -319,10 +319,14 @@ gui.classbase = {
 				i = j
 			elseif sibling.tabindex then
 				sibling.focus = false
+				sibling:onFocusLost()
 			end
 		end
 		parent.focusedChildIndex = i
-	end
+		self:onFocus()
+	end,
+	onFocus = function() end,
+	onFocusLost = function() end
 }
 gui.classbase.__index = gui.classbase
 function gui.class(name, extends)
