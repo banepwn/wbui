@@ -79,6 +79,10 @@ return function(gui)
 			love.graphics.setFont(font)
 			local tw = font:getWidth(self.text)
 			love.graphics.print(self.text, self.tx-math.max(0, tw-self.w+9), self.ty)
+			if self.focus and love.timer.getTime()%1 < 0.5 then
+				local cx = math.min(self.tx+tw+1, self.w-3)
+				love.graphics.line(cx, 3, cx, self.h-3)
+			end
 		love.graphics.setScissor()
 	end
 	function elclass:keyDown(key, scan, repeated)
