@@ -8,8 +8,8 @@ return function(gui)
 	elclass.ry = elclass.h
 	elclass.rh = 15
 	elclass.tabindex = true
-	function elclass:initialize(values, x, y, w, h)
-		self.values = values
+	function elclass:initialize(text, x, y, w, h)
+		self.text = text or ""
 		self.x = x
 		self.y = y
 		self.w = w or self.w
@@ -95,8 +95,11 @@ return function(gui)
 			self.cursor = math.min(self.cursor+1, math.max(#self.text, 1))
 		elseif key == 'backspace' then
 			self.text = self.text:sub(1, utf8.offset(self.text, -1)-1)
+		elseif key == 'return' or key == 'enter' then
+			self:onSubmit()
 		end
 	end
+	function elclass:onSubmit() end
 	function elclass:textInput(text)
 		self.text = self.text..text
 	end

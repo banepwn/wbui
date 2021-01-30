@@ -12,7 +12,7 @@ A simple [retained mode](https://en.wikipedia.org/wiki/Retained_mode) UI system 
 - [x] Dropdown list
 - [x] Keyboard accessibility
 - [ ] Easier element placement
-- [ ] Text input
+- [x] Text input
 - [ ] Spinner
 - [ ] Checkbox
 - [ ] Radio buttons
@@ -170,3 +170,9 @@ Options parameter mustn't be empty. Defaults to 229×23.
 Selects the specified index from the options.
 #### dropdown:onSelect(**number**: index, **string**: value)
 Called when a value is selected.
+### textbox
+A box you can type into. **Does not yet support text selection or clipboard actions.**
+#### textbox:initialize(optional **string**: text, **number**: x, **number**: y, optional **number**: width, optional **number**: height)
+Default text is empty string. Defaults to 229×23.
+#### textbox:onSubmit()
+Does nothing. Called when user hits Return or Enter.
