@@ -1,5 +1,6 @@
 return function(gui)
 	local elclass = gui.class('frame')
+	elclass.tabindex = true
 	function elclass:initialize(x, y, w, h)
 		self.x = x
 		self.y = y
@@ -33,6 +34,9 @@ return function(gui)
 			local j = self.focusedChildIndex
 			local c = self.children
 			local cc = #c
+			if cc == 0 then
+				return
+			end
 			local k = j and (j+i-1)%cc+1 or 1
 			while k ~= j do
 				local child = c[k]

@@ -1,7 +1,7 @@
 local gui = {}
 
 gui.require = ...
-gui.path = gui.require and gui.require:gsub("%.", "/")
+gui.path = gui.require and gui.require:gsub('%.', '/')
 function gui.initialize(tbl)
 	tbl = tbl or {}
 	local default = (tbl.fonts or {}).default or love.graphics.newFont(11)
@@ -65,17 +65,17 @@ function gui.initialize(tbl)
 	gui.cursors = {
 		default = false,
 		arrow = false,
-		text = love.mouse.getSystemCursor("ibeam"),
-		wait = love.mouse.getSystemCursor("wait"),
-		waitbg = love.mouse.getSystemCursor("waitarrow"),
-		precise = love.mouse.getSystemCursor("crosshair"),
-		link = love.mouse.getSystemCursor("hand"),
-		resizeLR = love.mouse.getSystemCursor("sizewe"),
-		resizeTB = love.mouse.getSystemCursor("sizens"),
-		resizeTLBR = love.mouse.getSystemCursor("sizenwse"),
-		resizeTRBL = love.mouse.getSystemCursor("sizenesw"),
-		move = love.mouse.getSystemCursor("sizeall"),
-		unavailable = love.mouse.getSystemCursor("no")
+		text = love.mouse.getSystemCursor('ibeam'),
+		wait = love.mouse.getSystemCursor('wait'),
+		waitbg = love.mouse.getSystemCursor('waitarrow'),
+		precise = love.mouse.getSystemCursor('crosshair'),
+		link = love.mouse.getSystemCursor('hand'),
+		resizeLR = love.mouse.getSystemCursor('sizewe'),
+		resizeTB = love.mouse.getSystemCursor('sizens'),
+		resizeTLBR = love.mouse.getSystemCursor('sizenwse'),
+		resizeTRBL = love.mouse.getSystemCursor('sizenesw'),
+		move = love.mouse.getSystemCursor('sizeall'),
+		unavailable = love.mouse.getSystemCursor('no')
 	}
 	for k, v in pairs(tbl.cursors or {}) do
 		gui.cursors[k] = v
@@ -83,16 +83,16 @@ function gui.initialize(tbl)
 	gui.cursors.__index = gui.cursors
 	gui.images = {
 		windowButtons = {
-			close = gui.path.."/assets/close.png",
-			maximize = gui.path.."/assets/maximize.png",
-			unmaximize = gui.path.."/assets/unmaximize.png",
-			minimize = gui.path.."/assets/minimize.png",
-			help = gui.path.."/assets/help.png"
+			close = gui.path..'/assets/close.png',
+			maximize = gui.path..'/assets/maximize.png',
+			unmaximize = gui.path..'/assets/unmaximize.png',
+			minimize = gui.path..'/assets/minimize.png',
+			help = gui.path..'/assets/help.png'
 		},
-		dropdownArrow = gui.path.."/assets/dropdown.png"
+		dropdownArrow = gui.path..'/assets/dropdown.png'
 	}
 	for k, v in pairs(tbl.images or {}) do
-		if type(v) == "table" then
+		if type(v) == 'table' then
 			for l, w in pairs(v) do
 				v[l] = w
 			end
@@ -101,7 +101,7 @@ function gui.initialize(tbl)
 		end
 	end
 	for k, v in pairs(gui.images) do
-		if type(v) == "table" then
+		if type(v) == 'table' then
 			for l, w in pairs(v) do
 				v[l] = love.graphics.newImage(w)
 			end
@@ -112,16 +112,16 @@ function gui.initialize(tbl)
 	end
 	gui.images.__index = gui.images
 	for _, widget in ipairs(tbl.classes or {
-		"frame",
-		"button",
-		"imagebutton",
-		"window",
-		"label",
-		"dropdown_list",
-		"dropdown",
-		"textbox"
+		'frame',
+		'button',
+		'imagebutton',
+		'window',
+		'label',
+		'dropdown_list',
+		'dropdown',
+		'textbox'
 	}) do
-		gui.classes[widget] = require(gui.require..".widgets."..widget)(gui)
+		gui.classes[widget] = require(gui.require..'.widgets.'..widget)(gui)
 	end
 	gui.root = setmetatable({
 		x = 0,
@@ -131,6 +131,24 @@ function gui.initialize(tbl)
 		children = {},
 		visible = true
 	}, gui.classbase)
+	function gui.root:mouseDown(button, x, y, presses, touch)
+		local modal = gui.modal
+		if modal then
+			local mx, my = modal:getAbsolutePosition()
+			if
+				-- i *SHOULD NOT HAVE TO* do this, but i do. wtf
+				-- bug in element:getAbsolutePosition ????
+				x >= mx-modal.ix and
+				y >= my-modal.iy and
+				x < mx+modal.w-modal.ix and
+				y < my+modal.h-modal.iy
+			then
+				return modal:mouseDown(button, x-mx, y-my, presses, touch)
+			end
+			return false
+		end
+		return gui.classbase.mouseDown(self, button, x, y, presses, touch)
+	end
 	function gui.root:mouseUp(button, x, y, presses, touch)
 		if gui.mouseDown then
 			local px, py = gui.mouseDown:getAbsolutePosition()
@@ -152,18 +170,27 @@ function gui.initialize(tbl)
 		return gui.classbase.mouseMoved(self, x, y, dx, dy, touch)
 	end
 	function gui.root:keyDown(key, scan, repeated)
+		if gui.modal then
+			return gui.modal:keyDown(key, scan, repeated)
+		end
 		local focusedChild = self.focusedChild
 		if focusedChild then
 			return focusedChild:keyDown(key, scan, repeated)
 		end
 	end
 	function gui.root:keyUp(key, scan)
+		if gui.modal then
+			return gui.modal:keyUp(key, scan)
+		end
 		local focusedChild = self.focusedChild
 		if focusedChild then
 			return focusedChild:keyUp(key, scan)
 		end
 	end
 	function gui.root:textInput(text)
+		if gui.modal then
+			return gui.modal:textInput(text)
+		end
 		local focusedChild = self.focusedChild
 		if focusedChild then
 			return focusedChild:textInput(text)
@@ -172,7 +199,7 @@ function gui.initialize(tbl)
 end
 
 gui.classbase = {
-	name = "element",
+	name = 'element',
 	new = function(self, ...)
 		local element = setmetatable({
 			children = {},
@@ -195,6 +222,12 @@ gui.classbase = {
 	end,
 	onRemove = function() end,
 	remove = function(self)
+		if gui.modal == self then
+			gui.modal = nil
+		end
+		if gui.mouseDown == self then
+			gui.mouseDown = nil
+		end
 		if self.parent then
 			for i, child in pairs(self.parent.children) do
 				if child == self and not self:onRemove() then
@@ -213,7 +246,7 @@ gui.classbase = {
 	draw = function(self)
 		for i, child in ipairs(self.children) do
 			if child.visible then
-				love.graphics.push("all")
+				love.graphics.push('all')
 					love.graphics.translate(child.x, child.y)
 					child:draw()
 				love.graphics.pop()
@@ -234,9 +267,6 @@ gui.classbase = {
 				y >= child.y and
 				y < child.y+child.h
 			then
-				if gui.modal and child ~= gui.modal and not gui.modal:onModalExit(child) then
-					return false
-				end
 				local el = child:mouseDown(button, x-child.x-(child.ix or 0), y-child.y-(child.iy or 0), presses, touch)
 				if el then
 					return el
@@ -332,7 +362,13 @@ gui.classbase = {
 		self:onFocus()
 	end,
 	onFocus = function() end,
-	onFocusLost = function() end
+	onFocusLost = function() end,
+	onModalExit = function() end,
+	center = function(self)
+		local parent = self.parent
+		self.x = (parent.w-self.w)/2
+		self.y = (parent.h-self.h)/2
+	end
 }
 gui.classbase.__index = gui.classbase
 function gui.class(name, extends)

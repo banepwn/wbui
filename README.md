@@ -86,6 +86,8 @@ Does nothing. Called when a key is pressed.
 Does nothing. Called when a key is released.
 #### element:textInput(**string**: text)
 Does nothing. Called when text is entered. Requires `love.keyboard.setTextInput(true)`. UTF-8 encoding.
+#### element:center()
+Sets the element's position to be centered. Make sure you set the width and height before calling this method.
 #### **number**: element.x
 X position.
 #### **number**: element.y
